@@ -2,55 +2,36 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    private Vector3 moveDirection;
+    public JoystickController joystickController; // Reference to the JoystickController
+    public float speed = 5f; // Movement speed of the player
+
+    private void Start()
+    {
+        // Ensure the JoystickController is assigned
+        if (joystickController == null)
+        {
+            Debug.LogError("JoystickController is not assigned in the PlayerController script!");
+        }
+    }
 
     private void Update()
     {
-        HandleInput();
-        MoveCharacter();
-    }
+        if (joystickController == null) return;
 
-    private void HandleInput()
-    {
-        // Touch input
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Moved)
-            {
-                ProcessInput(touch.position);
-            }
-        }
-        // Mouse input (for testing)
-        else if (Input.GetMouseButton(0))
-        {
-            ProcessInput(Input.mousePosition);
-        }
-        else
-        {
-            moveDirection = Vector3.zero;
-        }
-    }
+        // Get the input vector from the joystick
+        Vector2 input = joystickController.GetInputVector();
 
-    private void ProcessInput(Vector2 screenPosition)
-    {
-        Ray ray = Camera.main.ScreenPointToRay(screenPosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        // Convert the input to a 3D movement vector
+        Vector3 move = new Vector3(input.x, 0, input.y);
 
-        if (groundPlane.Raycast(ray, out float distance))
-        {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            moveDirection = (targetPoint - transform.position).normalized;
-        }
-    }
+        // Apply movement to the player
+        transform.Translate(move * speed * Time.deltaTime, Space.World);
 
-    private void MoveCharacter()
-    {
-        if (moveDirection != Vector3.zero)
+        // Optional: Rotate the player to face the movement direction
+        if (move != Vector3.zero)
         {
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
-            transform.rotation = Quaternion.LookRotation(moveDirection);
+            Quaternion targetRotation = Quaternion.LookRotation(move);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
     }
 }
