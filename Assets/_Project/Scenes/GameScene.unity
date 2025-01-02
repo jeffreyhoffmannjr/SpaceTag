@@ -401,7 +401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -400, y: -200}
+  m_AnchoredPosition: {x: -475, y: -500}
   m_SizeDelta: {x: 100, y: 455}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &405820867
@@ -626,7 +626,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 75, y: 75}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &760750887
@@ -642,7 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.19077078, b: 0.26415092, a: 1}
+  m_Color: {r: 0.09056564, g: 0.052954797, b: 0.6603774, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -895,8 +895,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 405820866}
   - {fileID: 1209609766}
+  - {fileID: 405820866}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -936,7 +936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treePrefab: {fileID: 8768457966404386918, guid: b9366f554ed624cfaa802a928d6d7ef1, type: 3}
-  objectCount: 20
+  objectCount: 35
   spawnRange: 20
 --- !u!4 &997552373
 Transform:
@@ -983,11 +983,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dcab4b35106a460e8bb0e75f980f26a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingManager: {fileID: 997552374}
   buildTreeButton: {fileID: 308112686}
-  buildTrapButton: {fileID: 327692138}
-  buildThornButton: {fileID: 1865819193}
-  quickDashButton: {fileID: 1990609158}
+  buildTowerButton: {fileID: 1865819193}
+  treePrefab: {fileID: 8768457966404386918, guid: b9366f554ed624cfaa802a928d6d7ef1, type: 3}
+  towerPrefab: {fileID: 7939868822596640894, guid: 6476ab7fc94ca4539a12dc87a473405c, type: 3}
+  player: {fileID: 1482944945}
 --- !u!1 &1209609765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1025,7 +1025,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 350, y: 350}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1209609767
 MonoBehaviour:
@@ -1229,7 +1229,7 @@ GameObject:
   - component: {fileID: 1482944946}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1348,7 +1348,7 @@ GameObject:
   - component: {fileID: 1500283250}
   - component: {fileID: 1500283249}
   m_Layer: 5
-  m_Name: Thorn
+  m_Name: Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1393,7 +1393,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Thorn
+  m_text: Tower
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1831,7 +1831,7 @@ GameObject:
   - component: {fileID: 1865819194}
   - component: {fileID: 1865819193}
   m_Layer: 5
-  m_Name: BuildThornButton
+  m_Name: BuildTowerButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2066,8 +2066,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 1610971382}
   - {fileID: 440503950}
-  - {fileID: 1686776465}
   - {fileID: 1482944950}
+  - {fileID: 1686776465}
   - {fileID: 997552373}
   - {fileID: 850680777}
   - {fileID: 477685747}

@@ -1,50 +1,58 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class JoystickController : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public RectTransform joystickBackground; // Background of the joystick
-    public RectTransform joystickHandle;    // Handle of the joystick
-    public float joystickRange = 75f;       // Maximum distance the handle can move
+    public RectTransform joystickBackground;
+    public RectTransform joystickHandle;
+    public float joystickRange = 75f; // Maximum distance the handle can move
 
-    private Vector2 inputVector;
+    private Vector2 inputVector; // Current input vector
 
-    // Public method to get the current input vector
     public Vector2 GetInputVector()
     {
         return inputVector;
     }
 
-    // Called when the joystick is pressed
     public void OnPointerDown(PointerEventData eventData)
     {
-        OnDrag(eventData);
+        Debug.Log("[JoystickController] PointerDown detected.");
+
+        // Reset joystick handle and input vector
+        joystickHandle.anchoredPosition = Vector2.zero;
+        inputVector = Vector2.zero;
+
+        Debug.Log("[JoystickController] Joystick initialized for dragging.");
     }
 
-    // Called when the joystick is being dragged
     public void OnDrag(PointerEventData eventData)
     {
+        Debug.Log("[JoystickController] Dragging detected.");
+
         Vector2 localPoint;
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
             joystickBackground,
             eventData.position,
             eventData.pressEventCamera,
-            out localPoint))
-        {
-            // Clamp the joystick handle movement within the joystick range
-            localPoint = Vector2.ClampMagnitude(localPoint, joystickRange);
-            inputVector = localPoint / joystickRange;
+            out localPoint
+        );
 
-            // Move the joystick handle
-            joystickHandle.anchoredPosition = localPoint;
-        }
+        // Clamp handle movement within joystick range
+        Vector2 clampedPoint = Vector2.ClampMagnitude(localPoint, joystickRange);
+        inputVector = clampedPoint / joystickRange; // Normalize input vector
+
+        // Move the joystick handle
+        joystickHandle.anchoredPosition = clampedPoint;
+
+        Debug.Log($"[JoystickController] Input Vector: {inputVector}, Handle Position: {joystickHandle.anchoredPosition}");
     }
 
-    // Called when the joystick is released
     public void OnPointerUp(PointerEventData eventData)
     {
-        inputVector = Vector2.zero; // Reset the input vector
-        joystickHandle.anchoredPosition = Vector2.zero; // Reset the handle position
+        Debug.Log("[JoystickController] PointerUp detected.");
+
+        // Reset joystick handle and input vector
+        joystickHandle.anchoredPosition = Vector2.zero;
+        inputVector = Vector2.zero;
     }
 }
