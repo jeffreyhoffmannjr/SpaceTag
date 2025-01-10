@@ -1,58 +1,55 @@
-using System.Collections;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    public GameObject projectilePrefab; // Assign the projectile prefab
-    public Transform firePoint; // Assign the FirePoint in Unity
-    public float fireRate = 1f; // How often the tower shoots
-    public float range = 10f; // Tower range
-    public int damage = 10; // Damage per projectile
+    public GameObject projectilePrefab;   // The projectile prefab to shoot
+    public Transform firePoint;           // Where the projectile spawns
+    public float fireRate = 1f;           // How often the tower fires
+    public float range = 10f;             // Range of the tower
+    public int damage = 10;               // Damage per projectile
 
-    private float fireTimer = 0f; // Timer to control fire rate
+    private float fireCooldown = 0f;
 
     private void Update()
     {
-        fireTimer += Time.deltaTime;
+        fireCooldown -= Time.deltaTime;
 
-        // Find the closest enemy in range
-        GameObject target = FindClosestEnemy();
-        if (target != null && fireTimer >= fireRate)
+        // Find the closest Infernal within range
+        GameObject target = FindClosestInfernal();
+        if (target != null && fireCooldown <= 0f)
         {
-            Shoot(target);
-            fireTimer = 0f; // Reset timer
+            Fire(target);
+            fireCooldown = 1f / fireRate;  // Reset cooldown
         }
     }
 
-    private GameObject FindClosestEnemy()
+    GameObject FindClosestInfernal()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, range); // Detect objects in range
-        GameObject closestEnemy = null;
-        float closestDistance = Mathf.Infinity;
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Infernal");
+        GameObject closest = null;
+        float closestDistance = range;
 
-        foreach (Collider hit in hits)
+        foreach (GameObject enemy in enemies)
         {
-            if (hit.CompareTag("Enemy")) // Check if the object is tagged "Enemy"
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < closestDistance)
             {
-                float distance = Vector3.Distance(transform.position, hit.transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestEnemy = hit.gameObject;
-                }
+                closest = enemy;
+                closestDistance = distance;
             }
         }
-        return closestEnemy;
+
+        return closest;
     }
 
-    private void Shoot(GameObject target)
+    void Fire(GameObject target)
     {
+        // Spawn projectile and aim it at the target
         GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        if (rb != null)
+        Projectile proj = projectile.GetComponent<Projectile>();
+        if (proj != null)
         {
-            Vector3 direction = (target.transform.position - firePoint.position).normalized;
-            rb.velocity = direction * 10f; // Adjust speed as needed
+            proj.SetTarget(target, damage);
         }
     }
 }
