@@ -36,6 +36,7 @@ public class Tower : MonoBehaviour
             {
                 closest = enemy;
                 closestDistance = distance;
+                Debug.Log($"Tower {gameObject.name} targeting {GetComponent<Collider>().name}");
             }
         }
 
@@ -50,6 +51,7 @@ public class Tower : MonoBehaviour
         if (proj != null)
         {
             proj.SetTarget(target, damage);
+            Debug.Log($"Tower {gameObject.name} firing at {target.name}");
         }
     }
 }

@@ -1226,7 +1226,7 @@ GameObject:
   - component: {fileID: 1441557833}
   - component: {fileID: 1441557832}
   - component: {fileID: 1441557831}
-  - component: {fileID: 1441557830}
+  - component: {fileID: 1441557835}
   m_Layer: 0
   m_Name: Infernal
   m_TagString: Infernal
@@ -1234,20 +1234,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1441557830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1441557829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e18969dc75a864b86ae62cbf142014ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  joystickController: {fileID: 1209609769}
-  speed: 5
 --- !u!136 &1441557831
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1291,7 +1277,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b34dac5b7339c4437917392819e0f3fd, type: 2}
+  - {fileID: 2100000, guid: 9ccfaeccbc5cd46989bdb7e1e7765d2d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1336,6 +1322,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1441557835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441557829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb0036b66d3db41a1830b8f543abeede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
 --- !u!1 &1482944945
 GameObject:
   m_ObjectHideFlags: 0
