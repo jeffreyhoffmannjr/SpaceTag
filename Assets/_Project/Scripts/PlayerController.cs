@@ -2,29 +2,29 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public JoystickController joystickController;
-    public float speed = 5f;
+    public JoystickController joystickController; // Reference to the joystick
+    public float speed = 5f;                      // Speed of the player
 
     private void Update()
     {
         if (joystickController == null) return;
 
-        // Get input vector from the joystick
+        // Get input from the joystick
         Vector2 input = joystickController.GetInputVector();
 
         // Debug input vector
         Debug.Log($"[PlayerController] Input Vector: {input}");
 
-        // Convert input to 3D movement
-        Vector3 move = new Vector3(input.x, 0, input.y);
+        // Convert the input to 3D movement on the XZ plane
+        Vector3 moveDirection = new Vector3(input.x, 0, input.y);
 
-        // Move the player
-        transform.Translate(move * speed * Time.deltaTime, Space.World);
+        // Apply movement
+        transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
 
-        // Rotate player to face movement direction
-        if (move != Vector3.zero)
+        // Rotate to face movement direction (optional)
+        if (moveDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(move);
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
     }

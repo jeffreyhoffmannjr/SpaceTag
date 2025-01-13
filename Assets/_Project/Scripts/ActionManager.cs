@@ -5,8 +5,10 @@ public class ActionManager : MonoBehaviour
 {
     public Button buildTreeButton;       // Button for building trees
     public Button buildTowerButton;      // Button for building towers
+    public Button buildTrapButton;       // Button for building traps
     public GameObject treePrefab;        // Prefab for the tree
     public GameObject towerPrefab;       // Prefab for the tower
+    public GameObject trapPrefab;        // Prefab for the trap
     public GameObject player;            // Reference to the player object
 
     void Start()
@@ -14,6 +16,7 @@ public class ActionManager : MonoBehaviour
         // Set up button click listeners
         buildTreeButton.onClick.AddListener(() => SpawnObject(treePrefab));
         buildTowerButton.onClick.AddListener(() => SpawnObject(towerPrefab));
+        buildTrapButton.onClick.AddListener(() => SpawnObject(trapPrefab));
     }
 
     void SpawnObject(GameObject prefab)
