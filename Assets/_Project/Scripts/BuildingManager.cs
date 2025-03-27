@@ -5,16 +5,16 @@ public class BuildingManager : MonoBehaviour
     public enum BuildingType
     {
         None,
-        Tree,
+        Base,
         Trap,
-        Thorn
+        Spore
     }
 
-    [SerializeField] private GameObject treeWallPrefab;
+    [SerializeField] private GameObject basePrefab;
     [SerializeField] private GameObject trapPrefab;
-    [SerializeField] private GameObject thornPrefab;
+    [SerializeField] private GameObject sporePrefab;
     [SerializeField] private LayerMask buildableLayer;
-    
+
     private BuildingType selectedBuilding = BuildingType.None;
     private GameObject buildingPreview;
 
@@ -28,9 +28,9 @@ public class BuildingManager : MonoBehaviour
     {
         switch (type)
         {
-            case BuildingType.Tree: return treeWallPrefab;
+            case BuildingType.Base: return basePrefab;
             case BuildingType.Trap: return trapPrefab;
-            case BuildingType.Thorn: return thornPrefab;
+            case BuildingType.Spore: return sporePrefab;
             default: return null;
         }
     }
@@ -39,21 +39,21 @@ public class BuildingManager : MonoBehaviour
     {
         if (selectedBuilding == BuildingType.None) return;
 
-        // Check for touch on right side of screen
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.position.x > Screen.width / 2)  // Right side of screen
+            if (touch.position.x > Screen.width / 2)
             {
                 HandleBuildingPlacement(touch);
             }
         }
 
-        // For testing in editor with mouse
+#if UNITY_EDITOR
         if (Input.GetMouseButton(0) && Input.mousePosition.x > Screen.width / 2)
         {
             HandleMousePlacement();
         }
+#endif
     }
 
     void HandleBuildingPlacement(Touch touch)
@@ -108,7 +108,6 @@ public class BuildingManager : MonoBehaviour
         if (prefab != null && buildingPreview == null)
         {
             buildingPreview = Instantiate(prefab, position, Quaternion.identity);
-            // Make it semi-transparent
             var renderers = buildingPreview.GetComponentsInChildren<Renderer>();
             foreach (var renderer in renderers)
             {

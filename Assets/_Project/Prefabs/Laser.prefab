@@ -46,8 +46,8 @@ GameObject:
   - component: {fileID: 2747584252515541885}
   - component: {fileID: 2330419945851943756}
   m_Layer: 0
-  m_Name: Tower
-  m_TagString: Untagged
+  m_Name: Laser
+  m_TagString: Laser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

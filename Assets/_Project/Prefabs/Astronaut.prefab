@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 4032881609982222731}
   - component: {fileID: 5635192697284802028}
   m_Layer: 0
-  m_Name: Infernal
-  m_TagString: Infernal
+  m_Name: Astronaut
+  m_TagString: Astronaut
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

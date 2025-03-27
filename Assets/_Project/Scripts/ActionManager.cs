@@ -4,63 +4,54 @@ using System.Collections;
 
 public class ActionManager : MonoBehaviour
 {
-    public Button buildTreeButton;
-    public Button buildTowerButton;
+    public Button buildBaseButton;
+    public Button buildLaserButton;
     public Button buildTrapButton;
     public Button dashButton;
 
-    public GameObject treePrefab;
-    public GameObject towerPrefab;
+    public GameObject basePrefab;
+    public GameObject laserPrefab;
     public GameObject trapPrefab;
-    public GameObject player;
+    public Image dashCooldownOverlay;
 
-    public Image dashCooldownOverlay;  // UI overlay for cooldown feedback
+    private AlienController playerController;
 
-    private TreeController playerController;
-
-    // Cooldowns
-    private float treeCooldown = 2f;
-    private float towerCooldown = 5f;
+    private float baseCooldown = 2f;
+    private float laserCooldown = 5f;
     private float trapCooldown = 3f;
     private float dashCooldown = 7f;
 
-    void Start()
+    public void SetPlayer(GameObject player)
     {
-        // Ensure we get the correct player reference
-        GameObject treePlayer = GameObject.FindWithTag("Tree");
-        if (treePlayer != null)
+        if (player == null)
         {
-            player = treePlayer;
-            playerController = player.GetComponent<TreeController>();
-        }
-        else
-        {
-            Debug.LogError("Tree player not found! Abilities will not work.");
-            return; // Stop execution if the player is not found
+            Debug.LogError("❌ SetPlayer: Provided player GameObject is null!");
+            return;
         }
 
-        // Set up button click listeners with cooldown management
-        buildTreeButton.onClick.AddListener(() => StartCoroutine(SpawnWithCooldown(buildTreeButton, treePrefab, treeCooldown)));
-        buildTowerButton.onClick.AddListener(() => StartCoroutine(SpawnWithCooldown(buildTowerButton, towerPrefab, towerCooldown)));
+        playerController = player.GetComponent<AlienController>();
+        if (playerController == null)
+        {
+            Debug.LogError("❌ SetPlayer: AlienController not found on player!");
+            return;
+        }
+
+        Debug.Log("✅ SetPlayer: AlienController assigned successfully.");
+
+        buildBaseButton.onClick.AddListener(() => StartCoroutine(SpawnWithCooldown(buildBaseButton, basePrefab, baseCooldown)));
+        buildLaserButton.onClick.AddListener(() => StartCoroutine(SpawnWithCooldown(buildLaserButton, laserPrefab, laserCooldown)));
         buildTrapButton.onClick.AddListener(() => StartCoroutine(SpawnWithCooldown(buildTrapButton, trapPrefab, trapCooldown)));
         dashButton.onClick.AddListener(() => StartCoroutine(DashWithCooldown()));
     }
 
     IEnumerator SpawnWithCooldown(Button button, GameObject prefab, float cooldown)
     {
-        if (player == null || prefab == null) yield break;
+        if (playerController == null || prefab == null) yield break;
 
-        // Disable the button
         button.interactable = false;
-
-        // Spawn the object behind the player
-        Vector3 spawnPosition = player.transform.position - player.transform.forward * 2f;
+        Vector3 spawnPosition = playerController.transform.position - playerController.transform.forward * 2f;
         Instantiate(prefab, spawnPosition, Quaternion.identity);
-
-        // Wait for cooldown
         yield return new WaitForSeconds(cooldown);
-
-        // Enable the button again
         button.interactable = true;
     }
 
@@ -68,17 +59,10 @@ public class ActionManager : MonoBehaviour
     {
         if (playerController == null) yield break;
 
-        // Disable Dash Button & Start Cooldown UI
         dashButton.interactable = false;
         StartCoroutine(ShowCooldownOverlay(dashCooldown));
-
-        // Trigger Dash Ability
         playerController.Dash();
-
-        // Wait for cooldown
         yield return new WaitForSeconds(dashCooldown);
-
-        // Enable the button
         dashButton.interactable = true;
     }
 
@@ -90,10 +74,10 @@ public class ActionManager : MonoBehaviour
         while (elapsed < cooldown)
         {
             elapsed += Time.deltaTime;
-            dashCooldownOverlay.fillAmount = 1 - (elapsed / cooldown); // Fill decreases over time
+            dashCooldownOverlay.fillAmount = 1 - (elapsed / cooldown);
             yield return null;
         }
 
-        dashCooldownOverlay.fillAmount = 0; // Reset overlay when cooldown ends
+        dashCooldownOverlay.fillAmount = 0;
     }
 }

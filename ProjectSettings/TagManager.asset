@@ -8,6 +8,11 @@ TagManager:
   - Infernal
   - Trap
   - Tree
+  - Spore
+  - Laser
+  - Alien
+  - Base
+  - Astronaut
   layers:
   - Default
   - TransparentFX
