@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 8985138082417097896}
   - component: {fileID: 9198490236318361056}
   - component: {fileID: 2119471728990364415}
+  - component: {fileID: -995098750810248500}
+  - component: {fileID: -2000913385003142538}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Alien
@@ -130,3 +132,30 @@ MonoBehaviour:
   fireballPrefab: {fileID: 0}
   fireballCooldown: 1.5
   fireballSpeed: 8
+--- !u!114 &-995098750810248500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8470459961841054800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7f015d1267addf4c9b42fc4c69cfbb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentXP: 0
+  currentLevel: 1
+  xpPerSecond: 1
+--- !u!114 &-2000913385003142538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8470459961841054800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def316f9b44f4f045b006b3047310374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

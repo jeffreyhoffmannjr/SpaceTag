@@ -117,6 +117,11 @@ public class GameManager : MonoBehaviour
         CheckAllRunnersCaptured();
     }
 
+    public bool IsGameActive()
+    {
+        return gameStarted && !gameEnded;
+    }
+
     void AssignRoles()
     {
         Debug.Log("🔁 AssignRoles() started.");
