@@ -74,9 +74,14 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"📦 Total players in allPlayers: {allPlayers.Count}");
-
         AssignRoles();
+
+        if (runners.Count == 0)
+        {
+            Debug.LogWarning("⚠️ No runners in game. Skipping game start.");
+            return;
+        }
+
         InitializeXP();
 
         timer = matchDuration;
@@ -87,22 +92,10 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("🌀 GameManager.Update() loop running...");
-
-        if (!gameStarted)
-        {
-            Debug.Log("🟠 Update skipped. Game has not started yet.");
-            return;
-        }
-
-        if (gameEnded)
-        {
-            Debug.Log("🛑 Update skipped. Game already ended.");
-            return;
-        }
+        if (!gameStarted) return;
+        if (gameEnded) return;
 
         timer -= Time.deltaTime;
-        Debug.Log($"⏱️ Timer ticking... Time left: {timer}");
 
         if (timer <= 0)
         {
@@ -124,14 +117,16 @@ public class GameManager : MonoBehaviour
 
     void AssignRoles()
     {
-        Debug.Log("🔁 AssignRoles() started.");
         runners.Clear();
         hunters.Clear();
 
-        int hunterCount = Mathf.Max(1, allPlayers.Count / 4);
-        Debug.Log($"🧠 Assigning {hunterCount} astronaut(s).");
-
         List<GameObject> unassigned = new List<GameObject>(allPlayers);
+
+        // 👇 Ensure at least one runner remains
+        int maxHunters = Mathf.Max(0, allPlayers.Count - 1);
+        int hunterCount = Mathf.Min(maxHunters, allPlayers.Count / 4);
+
+        Debug.Log($"🧠 Assigning {hunterCount} astronaut(s).");
 
         for (int i = 0; i < hunterCount && unassigned.Count > 0; i++)
         {
@@ -167,15 +162,14 @@ public class GameManager : MonoBehaviour
         Debug.Log($"✅ AssignRoles complete. Runners: {runners.Count}, Hunters: {hunters.Count}");
     }
 
+
     void InitializeXP()
     {
-        Debug.Log("🔧 Initializing XP for all players...");
         foreach (var player in allPlayers)
         {
             if (player != null && !playerXP.ContainsKey(player))
             {
                 playerXP[player] = 0f;
-                Debug.Log($"📈 XP initialized for {player.name}");
             }
         }
     }
@@ -187,13 +181,9 @@ public class GameManager : MonoBehaviour
             if (player != null)
             {
                 if (!playerXP.ContainsKey(player))
-                {
-                    Debug.Log($"❗ Player {player.name} had no XP key, creating one.");
                     playerXP[player] = 0f;
-                }
 
                 playerXP[player] += xpPerSecond * Time.deltaTime;
-                Debug.Log($"💸 Gave {xpPerSecond * Time.deltaTime:F2} XP to {player.name}");
             }
         }
     }
@@ -203,61 +193,43 @@ public class GameManager : MonoBehaviour
         if (player != null)
         {
             if (!playerXP.ContainsKey(player))
-            {
-                Debug.Log($"❗ Player {player.name} had no XP key for bonus, creating one.");
                 playerXP[player] = 0f;
-            }
 
             playerXP[player] += amount;
-            Debug.Log($"🎁 Bonus XP: Gave {amount} XP to {player.name}");
         }
     }
 
     public float GetXP(GameObject player)
     {
         if (player != null && playerXP.ContainsKey(player))
-        {
             return playerXP[player];
-        }
 
         return 0f;
     }
 
     public void TagRunner(GameObject runner)
     {
-        if (!runners.Contains(runner))
-        {
-            Debug.LogWarning("❌ Attempted to tag non-runner.");
-            return;
-        }
+        if (!runners.Contains(runner)) return;
 
         runner.transform.position = jailLocation.position;
-        AlienController controller = runner.GetComponent<AlienController>();
+
+        var controller = runner.GetComponent<AlienController>();
         if (controller != null)
         {
             controller.enabled = false;
-            Debug.Log($"🚓 Runner tagged and jailed: {runner.name}");
         }
     }
 
     void CheckAllRunnersCaptured()
     {
-        if (runners.Count == 0)
-        {
-            Debug.LogWarning("⚠️ No runners to check.");
-            return;
-        }
-
         foreach (var runner in runners)
         {
             if (runner != null && runner.GetComponent<AlienController>().enabled)
             {
-                Debug.Log("🟢 Runner still active.");
                 return;
             }
         }
 
-        Debug.Log("🔴 All runners captured. Ending game.");
         EndGame(false);
     }
 
@@ -267,6 +239,32 @@ public class GameManager : MonoBehaviour
 
         gameEnded = true;
 
+        foreach (var player in allPlayers)
+        {
+            if (player == null) continue;
+
+            // Disable movement
+            var controller = player.GetComponent<AlienController>();
+            if (controller != null)
+                controller.enabled = false;
+
+            // Disable joystick input
+            var joystick = player.GetComponentInChildren<JoystickController>();
+            if (joystick != null)
+                joystick.enabled = false;
+
+            // Disable all active ability scripts
+            MonoBehaviour[] abilities = player.GetComponents<MonoBehaviour>();
+            foreach (var ability in abilities)
+            {
+                if (ability != null && ability.enabled && ability.GetType() != typeof(AlienController))
+                {
+                    ability.enabled = false;
+                    Debug.Log($"🧯 Disabled {ability.GetType().Name} on {player.name}");
+                }
+            }
+        }
+
         if (winPanel != null)
             winPanel.SetActive(true);
 
@@ -274,29 +272,20 @@ public class GameManager : MonoBehaviour
             winText.text = runnersWin ? "Aliens Win!" : "Astronauts Win!";
 
         Debug.Log($"🏁 Game ended. {(runnersWin ? "Aliens Win!" : "Astronauts Win!")}");
-        //Invoke(nameof(RestartGame), 5f);
     }
 
     void RestartGame()
     {
-        Debug.Log("🔄 Restarting game...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     void UpdateTimerUI()
     {
-        if (timerText == null)
-        {
-            Debug.LogWarning("⚠️ Timer text is null!");
-            return;
-        }
+        if (timerText == null) return;
 
         int minutes = Mathf.FloorToInt(timer / 60f);
         int seconds = Mathf.FloorToInt(timer % 60f);
-        string formatted = $"{minutes:00}:{seconds:00}";
-        timerText.text = formatted;
+        timerText.text = $"{minutes:00}:{seconds:00}";
         timerText.ForceMeshUpdate();
-
-        Debug.Log($"📟 Timer updated: {formatted}");
     }
 }
